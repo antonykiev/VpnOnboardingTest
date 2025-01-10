@@ -3,21 +3,6 @@ package com.myproject.onboardingtesttask.ui
 import android.app.ActivityManager
 import android.content.Context
 import android.opengl.GLES20
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.unit.sp
-
-@Composable
-fun <T> optimizeSizeByHeight(
-    onLargeSize: () -> T,
-    onSmallSize: () -> T,
-    originalSize: Int = 720,
-): T {
-    val configuration = LocalConfiguration.current
-    val screenHeight = configuration.screenHeightDp
-
-    return if (screenHeight > originalSize) onLargeSize() else onSmallSize()
-}
 
 private const val minCores = 2
 private const val minMemory = 2 * 1024 * 1024 * 1024
