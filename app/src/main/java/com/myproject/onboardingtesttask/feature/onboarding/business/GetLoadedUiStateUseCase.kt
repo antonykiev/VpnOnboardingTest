@@ -11,9 +11,10 @@ import kotlinx.coroutines.supervisorScope
 import kotlin.coroutines.suspendCoroutine
 
 class GetLoadedUiStateUseCase(
+    private val context: Context
 ) {
 
-    suspend operator fun invoke(context: Context,): OnboardingUiState {
+    suspend operator fun invoke(): OnboardingUiState {
         return supervisorScope {
             val zeroDiffered =
                 async { loadLottieComposition(context, "animations/animation_0.json") }

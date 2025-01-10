@@ -36,7 +36,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.airbnb.lottie.LottieCompositionFactory
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieConstants
@@ -49,15 +48,14 @@ import com.myproject.onboardingtesttask.ui.isLowEndDevice
 import com.myproject.onboardingtesttask.ui.theme.OnboardingTestTaskTheme
 import com.myproject.onboardingtesttask.ui.theme.TextColorGrey
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun OnboardingScreen() {
-    val viewModel = viewModel<OnboardingViewModel>()
+    val viewModel = koinViewModel<OnboardingViewModel>()
     val uiState by viewModel.uiState.collectAsState()
 
     val context = LocalContext.current
-
-    viewModel.load(context)
 
     when (val state = uiState) {
         is OnboardingUiState.Loaded -> {
@@ -191,6 +189,7 @@ fun OnboardingScreen() {
                 }
             }
         }
+
         is OnboardingUiState.Loading -> {
             Column(
                 modifier = Modifier.fillMaxSize(),
