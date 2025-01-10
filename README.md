@@ -12,8 +12,8 @@
 ## Media
 
 <img src="media/Screenshot_20250110_130719.png" alt="first page" width="400">
-<img src="images/Screenshot_20250110_130734.png" alt="second page" width="400">
-<img src="images/Screenshot_20250110_130744.png" alt="third page" width="400">
+<img src="media/Screenshot_20250110_130734.png" alt="second page" width="400">
+<img src="media/Screenshot_20250110_130744.png" alt="third page" width="400">
 
 ---
 ## Links
