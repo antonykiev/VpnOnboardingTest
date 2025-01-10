@@ -24,6 +24,7 @@ private const val minMemory = 2 * 1024 * 1024 * 1024
 private const val minWidth = 400
 private const val minHeight = 720
 private const val minGpuVersion = "OpenGL ES 2.0"
+
 fun isLowEndDevice(context: Context): Boolean {
     val cpuCores = Runtime.getRuntime().availableProcessors()
     val memoryInfo = ActivityManager.MemoryInfo()
@@ -31,7 +32,7 @@ fun isLowEndDevice(context: Context): Boolean {
     activityManager.getMemoryInfo(memoryInfo)
 
     val displayMetrics = context.resources.displayMetrics
-    val gpuVersion = GLES20.glGetString(GLES20.GL_VERSION)
+    val gpuVersion = GLES20.glGetString(GLES20.GL_VERSION).orEmpty()
 
     return (cpuCores <= minCores || memoryInfo.totalMem < minMemory ||
             displayMetrics.widthPixels < minWidth || displayMetrics.heightPixels < minHeight ||
