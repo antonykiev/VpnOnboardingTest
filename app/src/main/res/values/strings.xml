@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">OnboardingTestTask</string>
+    <string name="onboarding_title_0">Доступны заблокированные сайты</string>
+    <string name="onboarding_title_1">Абсолютная анонимность и безопасность</string>
+    <string name="onboarding_title_2">Быстрые сервера по всей планете</string>
+    <string name="onboarding_description_0">Вы имеете полный доступ ко всей информации, которая недоступна в вашей стране, но доступна в других странах</string>
+    <string name="onboarding_description_1">Мы не храним и не передаём вашу историю нахождения в сети. скройте свой ip-адрес и зашифруйте свой трафик</string>
+    <string name="onboarding_description_2">Подключайтесь к любому из серверов, расположенных по всему миру на максимально возможной скорости</string>
+    <string name="continue_str">Продолжить</string>
+    <string name="skiip">Пропустить</string>
+    <string name="back">Назад</string>
+</resources>
