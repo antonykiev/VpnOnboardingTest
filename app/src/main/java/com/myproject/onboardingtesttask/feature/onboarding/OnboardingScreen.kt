@@ -55,13 +55,13 @@ fun OnboardingScreen() {
     val viewModel = viewModel<OnboardingViewModel>()
     val uiState by viewModel.uiState.collectAsState()
 
-    val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
 
     viewModel.load(context)
 
     when (val state = uiState) {
         is OnboardingUiState.Loaded -> {
+            val coroutineScope = rememberCoroutineScope()
             val pagerState = rememberPagerState()
 
             DisposableEffect(Unit) {
