@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -40,7 +41,6 @@ import com.airbnb.lottie.LottieCompositionFactory
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
-import com.airbnb.lottie.compose.rememberLottieComposition
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.HorizontalPagerIndicator
 import com.google.accompanist.pager.rememberPagerState
@@ -52,135 +52,155 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun OnboardingScreen() {
-    val context = LocalContext.current
-
     val viewModel = viewModel<OnboardingViewModel>()
     val uiState by viewModel.uiState.collectAsState()
 
-    val pagerState = rememberPagerState()
-
     val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
 
-    DisposableEffect(Unit) {
-        onDispose {
-            LottieCompositionFactory.clearCache(context)
-        }
-    }
+    viewModel.load(context)
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(48.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = if (pagerState.currentPage == 0)
-                Arrangement.End
-            else
-                Arrangement.SpaceBetween
-        ) {
-            if (pagerState.currentPage != 0) {
-                IconButton(
-                    onClick = {
-                        coroutineScope.launch {
-                            pagerState.animateScrollToPage(pagerState.currentPage - 1)
-                        }
-                    },
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .clip(CircleShape)
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.back_arrow),
-                        contentDescription = null,
-                        modifier = Modifier.clip(CircleShape),
-                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.surface)
-                    )
+    when (val state = uiState) {
+        is OnboardingUiState.Loaded -> {
+            val pagerState = rememberPagerState()
+
+            DisposableEffect(Unit) {
+                onDispose {
+                    LottieCompositionFactory.clearCache(context)
                 }
             }
-            Text(
-                modifier = Modifier
-                    .clickable { }
-                    .padding(16.dp),
-                color = TextColorGrey,
-                style = MaterialTheme.typography.bodySmall,
-                text = stringResource(R.string.skiip)
-            )
-        }
-        HorizontalPager(
-            count = uiState.pages.size,
-            state = pagerState,
-            modifier = Modifier.weight(1f)
-        ) { page ->
-            val composition by rememberLottieComposition(uiState.pages[page].lottieCompositionSpec)
-            val progress by animateLottieCompositionAsState(
-                composition = composition,
-                iterations = LottieConstants.IterateForever,
-                speed = if (isLowEndDevice(context)) 0.75F else 1F
-            )
 
             Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
             ) {
-                LottieAnimation(
-                    composition = composition,
-                    progress = progress,
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .fillMaxHeight(0.5F)
-                )
+                        .height(48.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = if (pagerState.currentPage == 0)
+                        Arrangement.End
+                    else
+                        Arrangement.SpaceBetween
+                ) {
+                    if (pagerState.currentPage != 0) {
+                        IconButton(
+                            onClick = {
+                                coroutineScope.launch {
+                                    pagerState.animateScrollToPage(pagerState.currentPage - 1)
+                                }
+                            },
+                            modifier = Modifier
+                                .fillMaxHeight()
+                                .clip(CircleShape)
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.back_arrow),
+                                contentDescription = null,
+                                modifier = Modifier.clip(CircleShape),
+                                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.surface)
+                            )
+                        }
+                    }
+                    Text(
+                        modifier = Modifier
+                            .clickable { }
+                            .padding(16.dp),
+                        color = TextColorGrey,
+                        style = MaterialTheme.typography.bodySmall,
+                        text = stringResource(R.string.skiip)
+                    )
+                }
+                HorizontalPager(
+                    count = state.pages.size,
+                    state = pagerState,
+                    modifier = Modifier.weight(1f)
+                ) { pageIndex ->
+                    val page = state.pages[pageIndex]
+                    val composition = page.lottieComposition
 
-                Text(
-                    text = stringResource(uiState.pages[page].title),
-                    style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(16.dp)
-                )
-                Text(
-                    text = stringResource(uiState.pages[page].description),
-                    style = MaterialTheme.typography.bodyMedium,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(16.dp)
-                )
-            }
-        }
+                    val progress by animateLottieCompositionAsState(
+                        composition = composition,
+                        iterations = LottieConstants.IterateForever,
+                        speed = if (isLowEndDevice(context)) 0.75F else 1F
+                    )
 
-        HorizontalPagerIndicator(
-            pagerState = pagerState,
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .padding(vertical = 16.dp),
-            activeColor = MaterialTheme.colorScheme.primary,
-            inactiveColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.3f)
-        )
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        LottieAnimation(
+                            composition = composition,
+                            progress = progress,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .fillMaxHeight(0.5F)
+                        )
 
-        Button(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(48.dp),
-
-            shape = RoundedCornerShape(6.dp),
-            onClick = {
-                coroutineScope.launch {
-                    if (pagerState.currentPage < uiState.pages.lastIndex) {
-                        pagerState.animateScrollToPage(pagerState.currentPage + 1)
+                        Text(
+                            text = stringResource(page.title),
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.padding(16.dp)
+                        )
+                        Text(
+                            text = stringResource(page.description),
+                            style = MaterialTheme.typography.bodyMedium,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.padding(16.dp)
+                        )
                     }
                 }
-            }) {
-            Box(
+
+                HorizontalPagerIndicator(
+                    pagerState = pagerState,
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(vertical = 16.dp),
+                    activeColor = MaterialTheme.colorScheme.primary,
+                    inactiveColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.3f)
+                )
+
+                Button(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(48.dp),
+
+                    shape = RoundedCornerShape(6.dp),
+                    onClick = {
+                        coroutineScope.launch {
+                            if (pagerState.currentPage < state.pages.lastIndex) {
+                                pagerState.animateScrollToPage(pagerState.currentPage + 1)
+                            }
+                        }
+                    }) {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = stringResource(R.string.continue_str),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = Color.White
+                        )
+                    }
+                }
+            }
+        }
+        is OnboardingUiState.Loading -> {
+            Column(
                 modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
-                    text = stringResource(R.string.continue_str),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = Color.White
+                CircularProgressIndicator(
+                    modifier = Modifier.size(48.dp),
+                    color = MaterialTheme.colorScheme.primary,
+                    strokeWidth = 4.dp
                 )
             }
         }

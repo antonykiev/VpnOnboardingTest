@@ -14,9 +14,11 @@ import com.myproject.onboardingtesttask.feature.onboarding.OnboardingScreen
 import com.myproject.onboardingtesttask.ui.theme.OnboardingTestTaskTheme
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
         setContent {
             OnboardingTestTaskTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
