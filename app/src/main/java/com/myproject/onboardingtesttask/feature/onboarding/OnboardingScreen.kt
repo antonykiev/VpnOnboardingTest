@@ -137,10 +137,18 @@ fun OnboardingScreen() {
                             progress = progress,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .fillMaxHeight(0.5F)
+                                .fillMaxHeight(
+                                    if (!LocalIsSmallDevice.current) {
+                                        0.5F
+                                    } else {
+                                        0.35F
+                                    }
+                                )
                         )
                         if (!LocalIsSmallDevice.current) {
-                            Spacer(modifier = Modifier.height(56.dp))
+                            Spacer(modifier = Modifier.height(40.dp))
+                        } else {
+                            Spacer(modifier = Modifier.height(24.dp))
                         }
                         Text(
                             text = stringResource(page.title),
@@ -150,7 +158,9 @@ fun OnboardingScreen() {
                             modifier = Modifier.padding(horizontal = 32.dp)
                         )
                         if (!LocalIsSmallDevice.current) {
-                            Spacer(modifier = Modifier.height(40.dp))
+                            Spacer(modifier = Modifier.height(36.dp))
+                        } else {
+                            Spacer(modifier = Modifier.height(12.dp))
                         }
                         Text(
                             text = stringResource(page.description),
