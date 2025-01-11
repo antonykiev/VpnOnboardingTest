@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -45,6 +46,7 @@ import com.google.accompanist.pager.HorizontalPagerIndicator
 import com.google.accompanist.pager.rememberPagerState
 import com.myproject.onboardingtesttask.R
 import com.myproject.onboardingtesttask.ui.isLowEndDevice
+import com.myproject.onboardingtesttask.ui.theme.LocalIsSmallDevice
 import com.myproject.onboardingtesttask.ui.theme.OnboardingTestTaskTheme
 import com.myproject.onboardingtesttask.ui.theme.TextColorGrey
 import kotlinx.coroutines.launch
@@ -70,8 +72,7 @@ fun OnboardingScreen() {
 
             Column(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
+                    .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
@@ -95,6 +96,7 @@ fun OnboardingScreen() {
                             modifier = Modifier
                                 .fillMaxHeight()
                                 .clip(CircleShape)
+                                .padding(start = 8.dp)
                         ) {
                             Image(
                                 painter = painterResource(id = R.drawable.back_arrow),
@@ -137,19 +139,24 @@ fun OnboardingScreen() {
                                 .fillMaxWidth()
                                 .fillMaxHeight(0.5F)
                         )
-
+                        if (!LocalIsSmallDevice.current) {
+                            Spacer(modifier = Modifier.height(56.dp))
+                        }
                         Text(
                             text = stringResource(page.title),
                             style = MaterialTheme.typography.bodyLarge,
                             fontWeight = FontWeight.Bold,
                             textAlign = TextAlign.Center,
-                            modifier = Modifier.padding(16.dp)
+                            modifier = Modifier.padding(horizontal = 32.dp)
                         )
+                        if (!LocalIsSmallDevice.current) {
+                            Spacer(modifier = Modifier.height(40.dp))
+                        }
                         Text(
                             text = stringResource(page.description),
                             style = MaterialTheme.typography.bodyMedium,
                             textAlign = TextAlign.Center,
-                            modifier = Modifier.padding(16.dp)
+                            modifier = Modifier.padding(horizontal = 32.dp)
                         )
                     }
                 }
@@ -158,15 +165,20 @@ fun OnboardingScreen() {
                     pagerState = pagerState,
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
-                        .padding(vertical = 16.dp),
+                        .padding(bottom = 32.dp),
                     activeColor = MaterialTheme.colorScheme.primary,
-                    inactiveColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.3f)
+                    inactiveColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.1f),
+                    indicatorWidth = 14.dp,
+                    indicatorHeight = 6.dp,
+                    spacing = 16.dp,
+                    indicatorShape = CircleShape
                 )
 
                 Button(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(48.dp),
+                        .height(48.dp)
+                        .padding(horizontal = 32.dp),
 
                     shape = RoundedCornerShape(6.dp),
                     onClick = {
@@ -181,12 +193,16 @@ fun OnboardingScreen() {
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = stringResource(R.string.continue_str),
+                            text = if (pagerState.currentPage == state.pages.lastIndex)
+                                stringResource(R.string.begin)
+                            else
+                                stringResource(R.string.continue_str),
                             style = MaterialTheme.typography.bodyMedium,
                             color = Color.White
                         )
                     }
                 }
+                Spacer(modifier = Modifier.height(32.dp))
             }
         }
 

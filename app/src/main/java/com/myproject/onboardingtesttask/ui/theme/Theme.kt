@@ -9,6 +9,8 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
@@ -66,60 +68,67 @@ fun OnboardingTestTaskTheme(
 
     val configuration = LocalConfiguration.current
     val isSmallDevice = configuration.screenWidthDp <= 320
+    CompositionLocalProvider(
+        LocalIsSmallDevice provides isSmallDevice
+    ) {
+        val Typography = if (!isSmallDevice) {
+            Typography(
+                bodyLarge = TextStyle(
+                    fontFamily = Roboto,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 20.sp,
+                    lineHeight = 24.sp,
+                    letterSpacing = 0.5.sp
+                ),
+                bodyMedium = TextStyle(
+                    fontFamily = Roboto,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 17.sp,
+                    lineHeight = 32.sp,
+                    letterSpacing = 0.5.sp
+                ),
+                bodySmall = TextStyle(
+                    fontFamily = Roboto,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 15.sp,
+                    lineHeight = 24.sp,
+                    letterSpacing = 0.5.sp
+                )
+            )
+        } else {
+            Typography(
+                bodyLarge = TextStyle(
+                    fontFamily = Roboto,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 16.sp,
+                    lineHeight = 20.sp,
+                    letterSpacing = 0.5.sp
+                ),
+                bodyMedium = TextStyle(
+                    fontFamily = Roboto,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 13.sp,
+                    lineHeight = 17.sp,
+                    letterSpacing = 0.5.sp
+                ),
+                bodySmall = TextStyle(
+                    fontFamily = Roboto,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 11.sp,
+                    lineHeight = 14.sp,
+                    letterSpacing = 0.5.sp
+                )
+            )
+        }
 
-    val Typography = if (!isSmallDevice) {
-        Typography(
-            bodyLarge = TextStyle(
-                fontFamily = Roboto,
-                fontWeight = FontWeight.Normal,
-                fontSize = 20.sp,
-                lineHeight = 32.sp,
-                letterSpacing = 0.5.sp
-            ),
-            bodyMedium = TextStyle(
-                fontFamily = Roboto,
-                fontWeight = FontWeight.Normal,
-                fontSize = 17.sp,
-                lineHeight = 28.sp,
-                letterSpacing = 0.5.sp
-            ),
-            bodySmall = TextStyle(
-                fontFamily = Roboto,
-                fontWeight = FontWeight.Normal,
-                fontSize = 15.sp,
-                lineHeight = 24.sp,
-                letterSpacing = 0.5.sp
-            )
-        )
-    } else {
-        Typography(
-            bodyLarge = TextStyle(
-                fontFamily = Roboto,
-                fontWeight = FontWeight.Normal,
-                fontSize = 16.sp,
-                lineHeight = 20.sp,
-                letterSpacing = 0.5.sp
-            ),
-            bodyMedium = TextStyle(
-                fontFamily = Roboto,
-                fontWeight = FontWeight.Normal,
-                fontSize = 13.sp,
-                lineHeight = 17.sp,
-                letterSpacing = 0.5.sp
-            ),
-            bodySmall = TextStyle(
-                fontFamily = Roboto,
-                fontWeight = FontWeight.Normal,
-                fontSize = 11.sp,
-                lineHeight = 14.sp,
-                letterSpacing = 0.5.sp
-            )
+        MaterialTheme(
+            colorScheme = colorScheme,
+            typography = Typography,
+            content = content
         )
     }
+}
 
-    MaterialTheme(
-        colorScheme = colorScheme,
-        typography = Typography,
-        content = content
-    )
+val LocalIsSmallDevice = staticCompositionLocalOf<Boolean> {
+    error("No property IsSmallDeviceCompositionLocal provided")
 }
