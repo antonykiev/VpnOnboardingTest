@@ -1,10 +1,12 @@
 package com.myproject.onboardingtesttask.feature.onboarding
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -13,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -27,6 +30,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,6 +46,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ConstraintLayout
 import com.airbnb.lottie.LottieCompositionFactory
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieConstants
@@ -50,11 +56,11 @@ import com.google.accompanist.pager.HorizontalPagerIndicator
 import com.google.accompanist.pager.rememberPagerState
 import com.myproject.onboardingtesttask.R
 import com.myproject.onboardingtesttask.ui.isLowEndDevice
-import com.myproject.onboardingtesttask.ui.theme.LocalIsSmallDevice
 import com.myproject.onboardingtesttask.ui.theme.OnboardingTestTaskTheme
 import com.myproject.onboardingtesttask.ui.theme.TextColorGrey
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
+import androidx.compose.runtime.*
 
 @Composable
 fun OnboardingScreen() {
@@ -77,7 +83,6 @@ fun OnboardingScreen() {
 fun OnboardingLoadedState(
     modifier: Modifier = Modifier,
     state: OnboardingUiState.Loaded,
-    isSmallDevice: Boolean = LocalIsSmallDevice.current,
     isLowEndDevice: Boolean = isLowEndDevice(LocalContext.current),
     density: Float = LocalDensity.current.density,
 ) {
@@ -115,7 +120,7 @@ fun OnboardingLoadedState(
                         }
                     },
                     modifier = Modifier
-                        .fillMaxHeight()
+                        .height(48.dp)
                         .clip(CircleShape)
                         .padding(start = 8.dp)
                 ) {
@@ -150,45 +155,56 @@ fun OnboardingLoadedState(
                 speed = if (isLowEndDevice) 0.75F else 1F
             )
 
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
+            ConstraintLayout(
+                Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight()
             ) {
+                val (animation, testContent) = createRefs()
+                var guidelineValue by remember { mutableStateOf(0.48F) }
+                val guideline = createGuidelineFromTop(guidelineValue)
+
                 LottieAnimation(
                     composition = composition,
                     progress = progress,
                     modifier = Modifier
+                        //.fillMaxWidth()
+                        .constrainAs(animation) {
+                            top.linkTo(parent.top)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                            bottom.linkTo(guideline)
+                            height = androidx.constraintlayout.compose.Dimension.fillToConstraints
+                        }
+                )
+                Column(
+                    modifier = Modifier
                         .fillMaxWidth()
-                        .fillMaxHeight(
-                            when {
-                                density > 3F -> 0.5F
-                                density > 2F -> 0.4F
-                                else -> 0.35F
-                            }
-                        )
-                )
-                if (!isSmallDevice) {
-                    Spacer(modifier = Modifier.height(50.dp))
-                } else {
-                    Spacer(modifier = Modifier.height(24.dp))
+                        .constrainAs(testContent) {
+                            top.linkTo(guideline)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                            bottom.linkTo(parent.bottom)
+                            height = androidx.constraintlayout.compose.Dimension.fillToConstraints
+                        }
+                            .padding(horizontal = 32.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.SpaceEvenly
+                ) {
+
+                    Text(
+                        text = stringResource(page.title),
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                    )
+
+                    Text(
+                        text = stringResource(page.description),
+                        style = MaterialTheme.typography.bodyMedium,
+                        textAlign = TextAlign.Center,
+                    )
                 }
-                Text(
-                    text = stringResource(page.title),
-                    style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(horizontal = 32.dp)
-                )
-                if (!isSmallDevice) {
-                    Spacer(modifier = Modifier.height(16.dp))
-                } else {
-                    Spacer(modifier = Modifier.height(12.dp))
-                }
-                Text(
-                    text = stringResource(page.description),
-                    style = MaterialTheme.typography.bodyMedium,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(horizontal = 32.dp)
-                )
             }
         }
 
@@ -256,7 +272,7 @@ fun OnboardingLoadingState(modifier: Modifier = Modifier) {
 @Preview(
     name = "Small Screen",
     showBackground = true,
-    widthDp = 320,
+    widthDp = 300,
     heightDp = 480
 )
 @Preview(
@@ -281,7 +297,6 @@ fun OnboardingLoadedStatePreview() {
                 )
             )
         ),
-        isSmallDevice = true,
         isLowEndDevice = false
     )
 }

@@ -57,6 +57,8 @@ dependencies {
     implementation(libs.koin.androidx.compose)
     implementation(libs.koin.android)
     implementation(libs.koin.core)
+    implementation(libs.androidx.constraintlayout.compose)
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

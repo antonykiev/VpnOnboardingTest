@@ -68,67 +68,59 @@ fun OnboardingTestTaskTheme(
 
     val configuration = LocalConfiguration.current
     val isSmallDevice = configuration.screenWidthDp <= 320
-    CompositionLocalProvider(
-        LocalIsSmallDevice provides isSmallDevice
-    ) {
-        val Typography = if (!isSmallDevice) {
-            Typography(
-                bodyLarge = TextStyle(
-                    fontFamily = Roboto,
-                    fontWeight = FontWeight.Normal,
-                    fontSize = 20.sp,
-                    lineHeight = 24.sp,
-                    letterSpacing = 0.5.sp
-                ),
-                bodyMedium = TextStyle(
-                    fontFamily = Roboto,
-                    fontWeight = FontWeight.Normal,
-                    fontSize = 17.sp,
-                    lineHeight = 24.sp,
-                    letterSpacing = 0.5.sp
-                ),
-                bodySmall = TextStyle(
-                    fontFamily = Roboto,
-                    fontWeight = FontWeight.Normal,
-                    fontSize = 15.sp,
-                    lineHeight = 24.sp,
-                    letterSpacing = 0.5.sp
-                )
+    val Typography = if (!isSmallDevice) {
+        Typography(
+            bodyLarge = TextStyle(
+                fontFamily = Roboto,
+                fontWeight = FontWeight.Normal,
+                fontSize = 20.sp,
+                lineHeight = 24.sp,
+                letterSpacing = 0.5.sp
+            ),
+            bodyMedium = TextStyle(
+                fontFamily = Roboto,
+                fontWeight = FontWeight.Normal,
+                fontSize = 17.sp,
+                lineHeight = 24.sp,
+                letterSpacing = 0.5.sp
+            ),
+            bodySmall = TextStyle(
+                fontFamily = Roboto,
+                fontWeight = FontWeight.Normal,
+                fontSize = 15.sp,
+                lineHeight = 24.sp,
+                letterSpacing = 0.5.sp
             )
-        } else {
-            Typography(
-                bodyLarge = TextStyle(
-                    fontFamily = Roboto,
-                    fontWeight = FontWeight.Normal,
-                    fontSize = 16.sp,
-                    lineHeight = 20.sp,
-                    letterSpacing = 0.5.sp
-                ),
-                bodyMedium = TextStyle(
-                    fontFamily = Roboto,
-                    fontWeight = FontWeight.Normal,
-                    fontSize = 13.sp,
-                    lineHeight = 17.sp,
-                    letterSpacing = 0.5.sp
-                ),
-                bodySmall = TextStyle(
-                    fontFamily = Roboto,
-                    fontWeight = FontWeight.Normal,
-                    fontSize = 11.sp,
-                    lineHeight = 14.sp,
-                    letterSpacing = 0.5.sp
-                )
+        )
+    } else {
+        Typography(
+            bodyLarge = TextStyle(
+                fontFamily = Roboto,
+                fontWeight = FontWeight.Normal,
+                fontSize = 16.sp,
+                lineHeight = 12.sp,
+                letterSpacing = 0.5.sp
+            ),
+            bodyMedium = TextStyle(
+                fontFamily = Roboto,
+                fontWeight = FontWeight.Normal,
+                fontSize = 13.sp,
+                lineHeight = 12.sp,
+                letterSpacing = 0.5.sp
+            ),
+            bodySmall = TextStyle(
+                fontFamily = Roboto,
+                fontWeight = FontWeight.Normal,
+                fontSize = 11.sp,
+                lineHeight = 12.sp,
+                letterSpacing = 0.5.sp
             )
-        }
-
-        MaterialTheme(
-            colorScheme = colorScheme,
-            typography = Typography,
-            content = content
         )
     }
-}
 
-val LocalIsSmallDevice = staticCompositionLocalOf<Boolean> {
-    error("No property IsSmallDeviceCompositionLocal provided")
+    MaterialTheme(
+        colorScheme = colorScheme,
+        typography = Typography,
+        content = content
+    )
 }
