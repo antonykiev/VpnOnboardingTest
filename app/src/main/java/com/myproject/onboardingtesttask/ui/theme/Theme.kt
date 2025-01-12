@@ -84,7 +84,7 @@ fun OnboardingTestTaskTheme(
                     fontFamily = Roboto,
                     fontWeight = FontWeight.Normal,
                     fontSize = 17.sp,
-                    lineHeight = 32.sp,
+                    lineHeight = 24.sp,
                     letterSpacing = 0.5.sp
                 ),
                 bodySmall = TextStyle(

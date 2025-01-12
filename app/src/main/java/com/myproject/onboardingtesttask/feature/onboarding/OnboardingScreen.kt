@@ -31,6 +31,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -75,6 +76,7 @@ fun OnboardingLoadedState(
     state: OnboardingUiState.Loaded,
     isSmallDevice: Boolean = LocalIsSmallDevice.current,
     isLowEndDevice: Boolean = isLowEndDevice(LocalContext.current),
+    density: Float = LocalDensity.current.density,
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
@@ -154,15 +156,15 @@ fun OnboardingLoadedState(
                     modifier = Modifier
                         .fillMaxWidth()
                         .fillMaxHeight(
-                            if (!isSmallDevice) {
-                                0.5F
-                            } else {
-                                0.35F
+                            when {
+                                density > 3F -> 0.5F
+                                density > 2F -> 0.4F
+                                else -> 0.35F
                             }
                         )
                 )
                 if (!isSmallDevice) {
-                    Spacer(modifier = Modifier.height(40.dp))
+                    Spacer(modifier = Modifier.height(50.dp))
                 } else {
                     Spacer(modifier = Modifier.height(24.dp))
                 }
@@ -174,7 +176,7 @@ fun OnboardingLoadedState(
                     modifier = Modifier.padding(horizontal = 32.dp)
                 )
                 if (!isSmallDevice) {
-                    Spacer(modifier = Modifier.height(36.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
                 } else {
                     Spacer(modifier = Modifier.height(12.dp))
                 }
@@ -224,6 +226,7 @@ fun OnboardingLoadedState(
                     else
                         stringResource(R.string.continue_str),
                     style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.SemiBold,
                     color = Color.White
                 )
             }
@@ -275,7 +278,7 @@ fun OnboardingLoadedStatePreview() {
                 )
             )
         ),
-        isSmallDevice = false,
+        isSmallDevice = true,
         isLowEndDevice = false
     )
 }
