@@ -247,7 +247,18 @@ fun OnboardingLoadingState(modifier: Modifier = Modifier) {
     }
 }
 
-@Preview(showBackground = true)
+@Preview(
+    name = "Small Screen",
+    showBackground = true,
+    widthDp = 320,
+    heightDp = 480
+)
+@Preview(
+    name = "Large Screen",
+    showBackground = true,
+    widthDp = 600,
+    heightDp = 960
+)
 @Composable
 fun OnboardingLoadedStatePreview() {
     OnboardingLoadedState(
